@@ -1,0 +1,24 @@
+name: test
+on: [push]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest' ]
+        go: [ '1.15' ]
+    steps:
+      - name: Checkout repositories
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Setup Go ${{ matrix.go }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Run Linter
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+          args: --disable-all --enable=goimports --enable=golint --enable=govet --enable=errcheck --enable=staticcheck
